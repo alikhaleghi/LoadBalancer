@@ -1,0 +1,58 @@
+{
+  "browser": {
+    "child_process": false
+  },
+  "name": "loadbalancer",
+  "productName": "Load Balancer",
+  "version": "1.5.0",
+  "description": "Improve Internet speed by merging several different internet connections.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "echo \"No linting configured\""
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "30.0.3"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Ali Khaleghi",
+    "email": "awli.khaleghi@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "app-root-dir": "^1.0.2",
+    "electron-json-storage": "^4.6.0",
+    "electron-root-path": "^1.1.0",
+    "electron-squirrel-startup": "^1.0.1",
+    "tree-kill": "^1.2.2"
+  },
+  "build": {
+    "asarUnpack": [
+      "src/dispatch"
+    ],
+    "appId": "khaleghi.network",
+    "asar": true,
+    "extraResources": [
+      {
+        "from": "src/dispatch",
+        "to": "dispatch"
+      },
+      {
+        "from": "src/resources",
+        "to": "resources"
+      }
+    ]
+  }
+}
