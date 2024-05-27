@@ -1,3 +1,11 @@
+IconikAIIcons
+IconikAIIcons.zip
+installer-complete.zip
+Output
+src/database/*.json
+src/database/*.json.*
+src/database/*.json.*
+!src/dispatch/dispatch.exe
 # Logs
 logs
 *.log

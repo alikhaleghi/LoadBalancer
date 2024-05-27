@@ -10,11 +10,22 @@ const execPromise = util.promisify(exec);
 const storage = require('electron-json-storage');
 const path = require('path');
 const isDev = process.env.npm_node_execpath ? true : false
- 
-
+const { remote } = require('electron')
 storage.setDataPath((isDev ? (appRootDir + '/src/') : (path.parse(appRootDir).dir + '/src/'))+"/database")
 
+
 contextBridge.exposeInMainWorld('storage', storage );
+contextBridge.exposeInMainWorld('setOSTheme', async function() {
+    let theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    await storage.set("os_theme", theme)
+
+    document.documentElement.setAttribute(
+        'data-theme',
+        theme,
+    )
+
+    return theme
+});
 contextBridge.exposeInMainWorld('getActiveAdaptors', async function(server) {
     let server_item = storage.get("server")
     return server_item.balancing ? server.balancing : []
@@ -37,8 +48,8 @@ contextBridge.exposeInMainWorld('killServer', async function() {
     }
 });
 contextBridge.exposeInMainWorld('runDispatcher', async function() {
-    const server    = storage.getSync('server');
-
+    const server    = await storage.getSync('server');
+    console.log(server)
     const path = require('path');
     const isDev = process.env.npm_node_execpath ? true : false
 
@@ -55,6 +66,7 @@ contextBridge.exposeInMainWorld('runDispatcher', async function() {
         console.log("is online: " + server.online)
         kill(server.online);
         console.log("killed: " + server.online)
+        return
     }
     const exec = require('child_process').exec;
 
@@ -126,7 +138,7 @@ contextBridge.exposeInMainWorld('getAdaptors', async function() {
         const element = y[index];
 
         networks.push({
-            adaptor: element.match(/[A-Za-z-]+/)[0],
+            adaptor: (element.match(/[A-Za-z-]+/)[0]).substring(1),
             address: element.match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/g)[0]
         })
         
