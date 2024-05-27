@@ -22,6 +22,7 @@ const createWindow = () => {
     maxWidth: 385,
     maxHeight:435,
     webPreferences: {
+      // devTools: false,
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
 			nodeIntegrationInWorker: true,
