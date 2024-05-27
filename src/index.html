@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head> 
+  <head>  
     <meta charset="UTF-8" />
     <title>Load Balancer</title>
 
@@ -13,19 +13,36 @@
       <div id="statusParent"> Internet: <strong id="statusText"></strong> <strong id='status'></strong> <strong class="ringring" ></strong></div>
     </div>
     <div ></div>
-    <div class="app-alert-bar alert-bar-secondary" role="alert">
+    <div style="margin: 10px;" class="app-alert-bar alert-bar-secondary" role="alert">
       <i class="icons10-exclamation-mark app-color-primary"></i>
-      <strong class="app-color-primary">Networks</strong><span>5</span>
+      <strong class="app-color-primary">Available Networks: </strong><span id="availableNetworkCount">0</span>
       <div class="app-alert-bar-end-content">
-        <button data-win-toggle="modal" data-win-target="#SelectNetwork" class="app-btn app-btn-primary">Select Networks</button>
-        <button data-win-dismiss="alert" aria-label="Close"></button>
+        <button id="SelectNetworkDialogTrigger" data-win-toggle="modal" data-win-target="#SelectNetwork" class="app-btn app-btn-primary">Choose</button>
+        <!-- <button data-win-dismiss="alert" aria-label="Close"></button> -->
       </div>
     </div>
-    <div class="vertical-center" id="server">   
-      <button id="dispatch" class="app-btn" onclick="activateServer()"> 
-        <span>Start Fusion</span>
-      </button> 
+    <div class="vertical-center" id="server">
+      <div >
+        <ul id="proxying">
+          <!-- <li>
+            Ethernet
+            <div class="actions">
+              <div>
+                <i style="font-size:25px" class="icons10-download-2"></i>
+                <span style="font-size:15px;"> ∞</span>
+              </div>
+              <div>
+                <i style="font-size:25px" class="icons10-upload-2"></i>
+                <span style="font-size:15px;"> ∞</span>
+              </div>
+            </div>
+          </li>
+          <li>Wi-Fi</li> -->
+        </ul>
+        <span id="proxy_server">127</span>
+      </div> 
     </div> 
+    <button id="dispatch" onclick="activateServer()" class="bn9"><span id="dispatchtext"></span></button>
  
 
 
@@ -36,11 +53,11 @@
           <h3>Available Networks</h3>
         </div>
         <div class="app-dialog-body" id="networks">
-          <li class="app-list-item">
+          <!-- <li class="app-list-item">
             <a href="#/v4.2.1/dialogs">
               <img alt="image" style="display: none;">
               <div class="app-list-item-container">
-                <span class="app-list-title"><label for="CheckBoxDefault">Magenta Riddim</label></span>
+                <span class="app-list-title"><label for="CheckBoxDefault"> ---</label></span>
                 <p class="app-list-subtitle">5.6 MB</p>
               </div>
             </a>
@@ -48,8 +65,7 @@
               <input class="app-checkbox" type="checkbox" value="" id="CheckBoxDefault" checked>
             </div>
           </li>
-          
-
+           -->
         </div>
         <div class="app-dialog-footer">
           <button onclick="refreshNetworks()" class="app-btn app-btn-primary">
