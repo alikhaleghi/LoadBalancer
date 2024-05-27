@@ -8,9 +8,17 @@ const { exec } = require("child_process");
 const util  = require("util");
 const execPromise = util.promisify(exec);
 const storage = require('electron-json-storage');
-storage.setDataPath(__dirname+"/database")
+const path = require('path');
+const isDev = process.env.npm_node_execpath ? true : false
+ 
+
+storage.setDataPath((isDev ? (appRootDir + '/src/') : (path.parse(appRootDir).dir + '/src/'))+"/database")
 
 contextBridge.exposeInMainWorld('storage', storage );
+contextBridge.exposeInMainWorld('getActiveAdaptors', async function(server) {
+    let server_item = storage.get("server")
+    return server_item.balancing ? server.balancing : []
+});
 contextBridge.exposeInMainWorld('saveActiveAdaptors', async function(server) {
     storage.set("server", server)
 });
@@ -31,8 +39,11 @@ contextBridge.exposeInMainWorld('killServer', async function() {
 contextBridge.exposeInMainWorld('runDispatcher', async function() {
     const server    = storage.getSync('server');
 
+    const path = require('path');
+    const isDev = process.env.npm_node_execpath ? true : false
+
+    var executablePath = isDev ? (appRootDir + '/src/dispatch/dispatch.exe') : (path.parse(appRootDir).dir + '/src/dispatch/dispatch.exe');
     
-    var executablePath = appRootDir + '/src/dispatch/dispatch.exe';
     
     let ips = '';
     for (let index = 0; index < server.balancing.length; index++) {
@@ -48,7 +59,7 @@ contextBridge.exposeInMainWorld('runDispatcher', async function() {
     const exec = require('child_process').exec;
 
     let child_process_obj = await exec(executablePath +" start "+ ips, {
-        cwd: appRootDir + '/src/dispatch'
+        cwd: isDev ? (appRootDir + '/src/dispatch/') : (path.parse(appRootDir).dir + '/src/dispatch/')
     }, (error, stdout, stderr) => {
         
         if (error) {
@@ -92,12 +103,12 @@ contextBridge.exposeInMainWorld('getAdaptors', async function() {
     const fs = require('fs');
     const isDev = process.env.npm_node_execpath ? true : false
 
-    fs.readFile(path.join(path.parse(appRootDir).dir, 'dispatch', 'dispatch.exe'), (error, buffer) => {});
+    // fs.readFile(path.join(path.parse(appRootDir).dir, 'dispatch', 'dispatch.exe'), (error, buffer) => {});
     var executablePath = 
     isDev ? 
         appRootDir + '/src/dispatch/dispatch.exe' 
     : 
-        require('electron-root-path').rootPath + '/../resources/app.asar.dir/src/dispatch/dispatch.exe'
+    path.parse(appRootDir).dir + '/src/dispatch/dispatch.exe'
     ;
     
     console.log("dispatch.exe:",executablePath)
